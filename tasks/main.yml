@@ -1,2 +1,29 @@
 ---
-# tasks file for hmpps-logstash
+
+- name: Add ES Yum repo
+  copy:
+    src: "{{ role_path }}/files/logstash.repo"
+    dest: /etc/yum.repos.d/logstash.repo
+    remote_src: true
+  become: true
+
+- name: Install our logstash
+  yum:
+    name: "logstash-{{ logstash_version|default('6.2.4') }}"
+  become: true
+
+- name: Add our templates
+  template:
+    src: "{{ role_path }}/templates/output.conf.j2"
+    dest: /etc/logstash/conf.d/50-output.conf
+  become: true
+
+- name: Create our config
+  template:
+    src: "{{ role_path }}/templates/logstash.yml.j2"
+    dest: "/etc/logstash/logstash.yml"
+
+- name: Install the service
+  service:
+    name: logstash
+    state: started
