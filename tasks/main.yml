@@ -1,2 +1,31 @@
 ---
-# tasks file for hmpps-logstash
+
+- name: Add ES Yum repo
+  yum_repository:
+    name: Elastic repository for 6.x packages
+    description: Elastic repository for 6.x packages
+    baseurl: https://artifacts.elastic.co/packages/6.x/yum
+    gpgcheck: yes
+    gpgkey: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+  become: true
+
+- name: Install our logstash
+  yum:
+    name: "logstash-{{ logstash_version|default('6.2.4') }}"
+  become: true
+
+- name: Add our templates
+  template:
+    src: "{{ role_path }}/templates/output.conf.j2"
+    dest: /etc/logstash/conf.d/50-output.conf
+  become: true
+
+- name: Create our config
+  template:
+    src: "{{ role_path }}/templates/logstash.yml.j2"
+    dest: "/etc/logstash/logstash.yml"
+
+- name: Install the service
+  service:
+    name: logstash
+    state: started
