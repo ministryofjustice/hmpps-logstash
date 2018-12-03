@@ -16,7 +16,7 @@
 #
 # Use a descriptive name for the node:
 #
-# node.name: test
+node.name: {% ansible_env.HMPPS_FQDN|default('unknown') %}.{% ansible_env.HMPPS_DOMAIN %}
 #
 # If omitted the node name will default to the machine's host name
 #
@@ -31,7 +31,7 @@ path.data: /var/lib/logstash
 #
 # The ID of the pipeline.
 #
-# pipeline.id: main
+pipeline.id: {% ansible_env.HMPPS_ROLE|default('main') %}
 #
 # Set the number of workers that will, in parallel, execute the filters+outputs
 # stage of the pipeline.
@@ -50,7 +50,7 @@ path.data: /var/lib/logstash
 # pipeline.batch.delay: 50
 #
 # Force Logstash to exit during shutdown even if there are still inflight
- events in memory. By default, logstash will refuse to quit until all
+# events in memory. By default, logstash will refuse to quit until all
 # received events have been pushed to the outputs.
 #
 # WARNING: enabling this can lead to data loss during shutdown
@@ -74,16 +74,16 @@ path.data: /var/lib/logstash
 # Periodically check if the configuration has changed and reload the pipeline
 # This can also be triggered manually through the SIGHUP signal
 #
-# config.reload.automatic: false
+config.reload.automatic: true
 #
 # How often to check if the pipeline configuration has changed (in seconds)
 #
-# config.reload.interval: 3s
+config.reload.interval: 15s
 #
 # Show fully compiled configuration as debug log message
 # NOTE: --log.level must be 'debug'
 #
-# config.debug: false
+config.debug: true
 #
 # When enabled, process escaped characters such as \n and \" in strings in the
 # pipeline configuration files.
@@ -127,7 +127,7 @@ path.data: /var/lib/logstash
 # Internal queuing model, "memory" for legacy in-memory based queuing and
 # "persisted" for disk-based acked queueing. Defaults is memory
 #
-# queue.type: memory
+queue.type: persisted
 #
 # If using queue.type: persisted, the directory path where the data files will be stored.
 # Default is path.data/queue
@@ -154,8 +154,7 @@ path.data: /var/lib/logstash
 # queue.max_bytes: 1024mb
 #
 # If using queue.type: persisted, the maximum number of acked events before forcing a checkpoint
-
-                                                                                                  # Default is 1024, 0 for unlimited
+# Default is 1024, 0 for unlimited
 #
 # queue.checkpoint.acks: 1024
 #
@@ -172,7 +171,7 @@ path.data: /var/lib/logstash
 # ------------ Dead-Letter Queue Settings --------------
 # Flag to turn on dead-letter queue.
 #
-# dead_letter_queue.enable: false
+dead_letter_queue.enable: true
 
 # If using dead_letter_queue.enable: true, the maximum size of each dead letter queue. Entries
 # will be dropped if they would increase the size of the dead letter queue beyond this setting.
@@ -188,12 +187,12 @@ path.data: /var/lib/logstash
 #
 # Bind address for the metrics REST endpoint
 #
-# http.host: "127.0.0.1"
+http.host: "127.0.0.1"
 #
 # Bind port for the metrics REST endpoint, this option also accept a range
 # (9600-9700) and logstash will pick up the first available ports.
 #
-# http.port: 9600-9700
+http.port: 9600
 #
 # ------------ Debugging Settings --------------
 #
@@ -205,4 +204,5 @@ path.data: /var/lib/logstash
 #   * debug
 #   * trace
 #
-# log.level: info
+log.level: debug
+
