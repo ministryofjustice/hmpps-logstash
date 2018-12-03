@@ -16,7 +16,7 @@
 #
 # Use a descriptive name for the node:
 #
-node.name: {% ansible_env.HMPPS_FQDN|default('unknown') %}.{% ansible_env.HMPPS_DOMAIN %}
+node.name: {{ logstash_node_name }}
 #
 # If omitted the node name will default to the machine's host name
 #
@@ -31,7 +31,7 @@ path.data: /var/lib/logstash
 #
 # The ID of the pipeline.
 #
-pipeline.id: {% ansible_env.HMPPS_ROLE|default('main') %}
+pipeline.id: {{ logstash_pipeline_name }}
 #
 # Set the number of workers that will, in parallel, execute the filters+outputs
 # stage of the pipeline.
