@@ -204,7 +204,7 @@ http.port: 9600
 #   * debug
 #   * trace
 #
-log.level: {{ logstash_log_level|default('error) }}
+log.level: {{ logstash_log_level|default('error') }}
 path.logs: {{ logstash_logs_path|default('/var/log/logstash') }}
 
 
