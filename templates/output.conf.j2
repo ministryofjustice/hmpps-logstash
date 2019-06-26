@@ -1,7 +1,7 @@
 output {
         stdout { }
         elasticsearch {
-                hosts => "{{ monitoring_host }}"
+                hosts => "{{ logstash_host | default('logstash') }}"
                 index => "logstash-{{ ansible_env.HMPPS_ROLE }}-{{ ansible_env.HMPPS_STACK }}-%{+YYYY.MM.dd}"
         }
     }
