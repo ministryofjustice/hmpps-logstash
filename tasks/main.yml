@@ -23,7 +23,7 @@
     src: "{{ role_path }}/templates/logstash.yml.j2"
     dest: "/etc/logstash/logstash.yml"
   vars:
-    - logstash_node_name: "{{ [ansible_env.HMPPS_FQDN|default('unknown'), ansible_env.HMPPS_DOMAIN|default('')]|join('.') }}"
+    - logstash_node_name: "{{ hostname }}"
     - logstash_pipeline_name: "{{ ansible_env.HMPPS_ROLE|default('main') }}"
   become: true
 
