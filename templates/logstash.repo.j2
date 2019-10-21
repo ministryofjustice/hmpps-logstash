@@ -1,0 +1,8 @@
+[logstash-{{ base_version }}.x]
+name=Elastic repository for {{ base_version }}.x packages
+baseurl=https://artifacts.elastic.co/packages/{{ base_version }}.x/yum
+gpgcheck=1
+gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearch
+enabled=1
+autorefresh=1
+type=rpm-md

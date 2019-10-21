@@ -1,0 +1,12 @@
+---
+- name: Prepare
+  hosts: all
+  gather_facts: false
+  become: true
+  tasks:
+    - name: Install prereqs
+      yum:
+        name: 
+          - java-1.8.0-openjdk-headless
+          - ansible
+        state: present

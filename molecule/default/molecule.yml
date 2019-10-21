@@ -1,0 +1,32 @@
+---
+scenario:
+  name: default
+
+dependency:
+  name: galaxy
+driver:
+  name: vagrant
+  provider:
+    name: virtualbox
+platforms:
+  - name: centos7
+    box: centos/7
+    memory: 2048
+    cpus: 1
+    provider_raw_config_args:
+    - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected' ]"
+provisioner:
+  name: ansible
+  lint:
+    name: ansible-lint
+  playbooks:
+    prepare: prepare.yml
+    converge: playbook.yml
+verifier:
+  name: testinfra
+  directory: ../shared/tests
+  options:
+    v: true
+    sudo: true
+  lint:
+    name: flake8

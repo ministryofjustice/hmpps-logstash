@@ -1,2 +1,16 @@
 ---
 # defaults file for hmpps-logstash
+base_version: 5
+logstash_version: 5.6.15
+monitoring_host: "http://localhost:9200"
+elasticsearch_ssl: "false"
+logstash_log_level: error
+logstash_logs_path: "/var/log/logstash"
+logstash_data_path: "/usr/share/logstash/data"
+logstash_output_template: output.conf.j2
+logstash_network_host: "127.0.0.1"
+logstash_http_port: 9600
+# Service options.
+logstash_service_state: started
+logstash_service_enabled: true
+logstash_restart_handler_state: restarted
