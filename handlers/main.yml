@@ -1,0 +1,5 @@
+---
+- name: restart logstash
+  service:
+    name: logstash
+    state: "{{ logstash_restart_handler_state }}"

@@ -1,0 +1,4 @@
+docker
+ansible
+molecule
+python-vagrant

@@ -1,0 +1,23 @@
+node.name: {{ logstash_node_name }}
+
+path.data: {{ logstash_data_path }}
+
+path.config: /etc/logstash/conf.d
+
+config.reload.automatic: true
+
+config.reload.interval: 15
+
+config.debug: true
+
+queue.type: persisted
+
+dead_letter_queue.enable: true
+
+http.host: "127.0.0.1"
+
+http.port: 9600
+
+log.level: {{ logstash_log_level }}
+
+path.logs: {{ logstash_logs_path }}
