@@ -14,3 +14,5 @@ logstash_http_port: 9600
 logstash_service_state: started
 logstash_service_enabled: true
 logstash_restart_handler_state: restarted
+
+running_locally: true

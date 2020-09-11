@@ -1,0 +1,4 @@
+---
+base_version: 6
+logstash_version: 6.8.12
+running_locally: false

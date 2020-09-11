@@ -1,0 +1,9 @@
+---
+- name: Converge
+  hosts: all
+  vars_files:
+    - ../vars/docker.yml
+  tasks:
+    - name: "Include hmpps-logstash"
+      include_role:
+        name: "hmpps-logstash"

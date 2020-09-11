@@ -4,9 +4,44 @@
   gather_facts: false
   become: true
   tasks:
-    - name: Install prereqs
+    - name: Install epel-release
       yum:
-        name: 
-          - java-1.8.0-openjdk-headless
-          - ansible
+        name:
+          - epel-release
         state: present
+
+    - name: Install yum prereqs
+      yum:
+        name:
+          - java-1.8.0-openjdk-headless
+          - docker
+          - python2-pip
+        state: present
+
+    - name: Install pip prereqs
+      pip:
+        name:
+          - docker
+        state: present
+
+    - name: sysctl settings
+      sysctl:
+        name: vm.max_map_count
+        value: "262144"
+        state: present
+        sysctl_file: /etc/sysctl.d/elasticsearch.conf
+
+    - name: start docker service
+      service:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Create elasticsearch container
+      docker_container:
+        name: es
+        image: elasticsearch:6.8.10
+        state: started
+        recreate: yes
+        ports:
+          - "9200:9200"

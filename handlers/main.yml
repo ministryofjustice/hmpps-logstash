@@ -1,5 +1,5 @@
 ---
 - name: restart logstash
-  service:
+  systemd:
     name: logstash
-    state: "{{ logstash_restart_handler_state }}"
+    state: restarted

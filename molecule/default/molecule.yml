@@ -1,32 +1,19 @@
 ---
-scenario:
-  name: default
-
 dependency:
   name: galaxy
 driver:
-  name: vagrant
-  provider:
-    name: virtualbox
-platforms:
-  - name: centos7
-    box: centos/7
-    memory: 2048
-    cpus: 1
-    provider_raw_config_args:
-    - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected' ]"
-provisioner:
-  name: ansible
-  lint:
-    name: ansible-lint
-  playbooks:
-    prepare: prepare.yml
-    converge: playbook.yml
-verifier:
-  name: testinfra
-  directory: ../shared/tests
+  name: delegated
   options:
-    v: true
-    sudo: true
-  lint:
-    name: flake8
+    managed: False
+    login_cmd_template: "ssh instance -F ${PWD}/molecule/ssh/config"
+    ansible_connection_options:
+      ansible_connection: ssh
+      ansible_ssh_common_args: "-F ${PWD}/molecule/ssh/config"
+lint: |
+  set -e
+  yamllint .
+  ansible-lint
+platforms:
+  - name: instance
+verifier:
+  name: ansible

@@ -1,4 +1,8 @@
 ---
+- name: set facts
+  set_fact:
+    node_role: "{{ lookup('env', 'HMPPS_ROLE' or 'test-role' )}}"
+    node_stack: "{{ lookup('env', 'HMPPS_STACK' or 'test-stack' )}}"
 
 - name: Set JAVA_HOME if configured.
   template:
@@ -44,7 +48,7 @@
   notify: restart logstash
 
 - name: start the service
-  service:
+  systemd:
     name: logstash
     state: "{{ logstash_service_state }}"
     enabled: "{{ logstash_service_enabled }}"
@@ -56,3 +60,4 @@
     port: "{{ logstash_http_port }}"
     delay: 3
     timeout: 300
+  when: running_locally | bool
