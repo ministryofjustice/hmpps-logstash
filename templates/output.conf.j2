@@ -3,6 +3,5 @@ output {
         elasticsearch {
                 hosts => ["{{ monitoring_host }}"]
                 index => "logstash-{{ node_role }}-{{ node_stack }}-%{+YYYY.MM.dd}"
-                ssl => "{{ elasticsearch_ssl }}"
         }
     }

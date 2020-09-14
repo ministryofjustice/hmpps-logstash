@@ -3,6 +3,8 @@
   hosts: all
   gather_facts: false
   become: true
+  vars_files:
+    - ../vars/docker.yml
   tasks:
     - name: Install epel-release
       yum:
@@ -16,6 +18,7 @@
           - java-1.8.0-openjdk-headless
           - docker
           - python2-pip
+          - nginx
         state: present
 
     - name: Install pip prereqs
@@ -37,11 +40,49 @@
         state: started
         enabled: true
 
+    - name: start nginx service
+      service:
+        name: nginx
+        state: started
+        enabled: true
+
     - name: Create elasticsearch container
       docker_container:
         name: es
         image: elasticsearch:6.8.10
         state: started
-        recreate: yes
         ports:
           - "9200:9200"
+
+    - name: Create kibana container
+      docker_container:
+        name: kibana
+        image: docker.elastic.co/kibana/kibana-oss:6.8.9
+        state: started
+        ports:
+          - "5601:5601"
+        env:
+          ELASTICSEARCH_HOSTS: "http://es:9200"
+          SERVER_HOST: "0.0.0.0"
+        links: "es:es"
+
+    - name: Set Facts
+      set_fact:
+        es_version: "{{ logstash_version }}"
+        artifact_base: "https://artifacts.elastic.co/downloads/beats"
+
+    - name: Install beats components
+      include: ../tasks/install_beats.yml
+      with_items:
+        - filebeat
+
+    - name: Update our filebeat files
+      template:
+        src: templates/filebeat.yml.j2
+        dest: /etc/filebeat/filebeat.yml
+
+    - name: start filebeat service
+      service:
+        name: filebeat
+        state: restarted
+        enabled: true

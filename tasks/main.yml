@@ -1,8 +1,8 @@
 ---
 - name: set facts
   set_fact:
-    node_role: "{{ lookup('env', 'HMPPS_ROLE' or 'test-role' )}}"
-    node_stack: "{{ lookup('env', 'HMPPS_STACK' or 'test-stack' )}}"
+    node_role: "{{ lookup('env', 'HMPPS_ROLE') or 'hmpss' }}"
+    node_stack: "{{ lookup('env', 'HMPPS_STACK') or 'stack' }}"
 
 - name: Set JAVA_HOME if configured.
   template:
@@ -29,6 +29,15 @@
     state: present
   become: true
   notify: restart logstash
+
+- name: Update our logstash pipeline files
+  template:
+    src: "{{ role_path }}/templates/{{ item }}.j2"
+    dest: "/etc/logstash/conf.d/{{ item }}"
+  become: true
+  with_items:
+    - "01-logstash-filebeat-input.conf"
+  when: in_ci_mode | bool
 
 - name: Add our templates
   template:

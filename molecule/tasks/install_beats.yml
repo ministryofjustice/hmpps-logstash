@@ -1,0 +1,39 @@
+---
+- name: Check if our package is installed
+  yum:
+    list: "{{ item }}"
+  register: pkg_installed
+
+- block:
+    - name: construct our download url
+      set_fact:
+        download_url: "{{ artifact_base }}/{{ item }}/{{ item }}-{{ es_version }}-x86_64.rpm"
+
+    - name: Get our artifact
+      get_url:
+        url: "{{ download_url }}"
+        dest: "/tmp/{{ item }}-{{ es_version }}-x86_64.rpm"
+
+    - name: Install the package
+      yum:
+        name: "/tmp/{{ item }}-{{ es_version }}-x86_64.rpm"
+        state: present
+      become: true
+
+    - name: Remove the downloaded binary
+      file:
+        path: "/tmp/{{ item }}-{{ es_version }}-x86_64.rpm"
+        state: absent
+
+    - name: "Update our {{ item }} files"
+      template:
+        src: "templates/{{ item }}.yml.j2"
+        dest: "/etc/filebeat/{{ item }}.yml"
+
+    - name: "start {{ item }} service"
+      service:
+        name: "{{ item }}"
+        state: restarted
+        enabled: true
+
+  when: pkg_installed.results | selectattr("yumstate", "match", "installed") | list | length == 0

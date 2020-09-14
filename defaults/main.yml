@@ -16,3 +16,4 @@ logstash_service_enabled: true
 logstash_restart_handler_state: restarted
 
 running_locally: true
+in_ci_mode: false

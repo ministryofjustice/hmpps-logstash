@@ -1,4 +1,7 @@
 ---
 base_version: 6
 logstash_version: 6.8.12
+logstash_log_level: debug
 running_locally: false
+monitoring_host: http://localhost:9200
+in_ci_mode: true
